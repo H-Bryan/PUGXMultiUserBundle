@@ -4,11 +4,13 @@ namespace PUGX\MultiUserBundle\Form;
 
 use FOS\UserBundle\Form\Factory\FactoryInterface;
 use PUGX\MultiUserBundle\Model\UserDiscriminator;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 class FormFactory implements FactoryInterface
 {
-    /** @var \PUGX\MultiUserBundle\Model\UserDiscriminator */
+    /** @var UserDiscriminator */
     private $userDiscriminator;
 
     /** @var FormFactoryInterface */
@@ -23,17 +25,15 @@ class FormFactory implements FactoryInterface
     /**
      * @param UserDiscriminator    $userDiscriminator
      * @param FormFactoryInterface $formFactory
-     * @param string               $type              registration|profile
      */
-    public function __construct(UserDiscriminator $userDiscriminator, FormFactoryInterface $formFactory, $type)
+    public function __construct(UserDiscriminator $userDiscriminator, FormFactoryInterface $formFactory)
     {
         $this->userDiscriminator = $userDiscriminator;
         $this->formFactory = $formFactory;
-        $this->type = $type;
     }
 
     /**
-     * @return \Symfony\Component\Form\Form
+     * @return Form
      */
     public function createForm()
     {
@@ -45,7 +45,7 @@ class FormFactory implements FactoryInterface
             return $this->forms[$name];
         }
 
-        if (\Symfony\Component\HttpKernel\Kernel::MAJOR_VERSION >= 3) {
+        if (Kernel::MAJOR_VERSION >= 3) {
             $form = $this->formFactory->createNamed(
                 $name,
                 get_class($type),
@@ -65,5 +65,16 @@ class FormFactory implements FactoryInterface
         $this->forms[$name] = $form;
 
         return $form;
+    }
+
+    /**
+     * @param string $type
+     * @return FormFactory
+     */
+    public function setType(string $type): FormFactory
+    {
+        $this->type = $type;
+
+        return $this;
     }
 }

@@ -5,36 +5,37 @@ namespace PUGX\MultiUserBundle\Controller;
 use PUGX\MultiUserBundle\Model\UserDiscriminator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use FOS\UserBundle\Controller\RegistrationController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use PUGX\MultiUserBundle\Form\FormFactory;
 
 class RegistrationManager
 {
     /**
-     * @var \PUGX\MultiUserBundle\Model\UserDiscriminator
+     * @var UserDiscriminator
      */
     protected $userDiscriminator;
 
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @var ContainerInterface
      */
     protected $container;
 
     /**
-     * @var \FOS\UserBundle\Controller\RegistrationController
+     * @var RegistrationController
      */
     protected $controller;
 
     /**
-     * @var \PUGX\MultiUserBundle\Form\FormFactory
+     * @var FormFactory
      */
     protected $formFactory;
 
     /**
-     * @param \PUGX\MultiUserBundle\Model\UserDiscriminator             $userDiscriminator
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-     * @param \FOS\UserBundle\Controller\RegistrationController         $controller
-     * @param \PUGX\MultiUserBundle\Form\FormFactory                    $formFactory
+     * @param UserDiscriminator $userDiscriminator
+     * @param ContainerInterface $container
+     * @param RegistrationController $controller
+     * @param FormFactory $formFactory
      */
     public function __construct(UserDiscriminator $userDiscriminator,
                                 ContainerInterface $container,
@@ -50,7 +51,7 @@ class RegistrationManager
     /**
      * @param string $class
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function register($class)
     {
@@ -66,7 +67,7 @@ class RegistrationManager
             $template = 'FOSUserBundle:Registration:register.html.twig';
         }
 
-        $form = $this->formFactory->createForm();
+        $form = $this->formFactory->setType('registration')->createForm();
 
         return $this->container->get('templating')->renderResponse($template, [
             'form' => $form->createView(),
@@ -74,7 +75,7 @@ class RegistrationManager
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Request;
+     * @return Request
      */
     private function getRequest()
     {

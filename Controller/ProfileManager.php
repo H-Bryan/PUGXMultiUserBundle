@@ -68,7 +68,7 @@ class ProfileManager
             $template = 'FOSUserBundle:Profile:edit.html.twig';
         }
 
-        $form = $this->formFactory->createForm();
+        $form = $this->formFactory->setType("profile")->createForm();
 
         return $this->container->get('templating')->renderResponse($template, [
             'form' => $form->createView(),
